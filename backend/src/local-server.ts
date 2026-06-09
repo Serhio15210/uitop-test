@@ -1,5 +1,4 @@
-import "dotenv/config";
-import { app, closeDatabase, port } from "./runtime.js";
+import app, { closeDatabase, port } from "./index.js";
 
 const server = app.listen(port, () => {
   console.log(`TaskFlow API is running at http://localhost:${port}`);

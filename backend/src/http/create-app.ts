@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, {
+  type Express,
   type NextFunction,
   type Request,
   type Response,
@@ -7,9 +8,11 @@ import express, {
 import { TodoService } from "../application/todo-service.js";
 import { DomainError } from "../domain/errors.js";
 
-export function createApp(service: TodoService, allowedOrigins: string[]) {
-  const app = express();
-
+export function configureApp(
+  app: Express,
+  service: TodoService,
+  allowedOrigins: string[],
+) {
   app.use(cors({ origin: allowedOrigins }));
   app.use(express.json());
 
@@ -80,4 +83,8 @@ export function createApp(service: TodoService, allowedOrigins: string[]) {
   );
 
   return app;
+}
+
+export function createApp(service: TodoService, allowedOrigins: string[]) {
+  return configureApp(express(), service, allowedOrigins);
 }
