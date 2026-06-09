@@ -17,7 +17,7 @@ Each directory has its own:
 - `package.json` and `package-lock.json`
 - dependencies and npm scripts
 - ESLint and Prettier configuration
-- `.env.example`, `.gitignore`, and `vercel.json`
+- `.env.example` and `.gitignore`
 
 There are no npm workspaces or shared runtime dependencies.
 
@@ -96,45 +96,44 @@ SQLite implementation.
 
 Creating a sixth task in one category returns `400 Bad Request`.
 
-## Vercel deployment
+## Deployment
 
-Create two Vercel projects connected to the same GitHub repository.
+The recommended deployment uses Railway for the backend and Vercel for the
+frontend.
 
-### Backend project
+### Backend on Railway
 
-1. Set **Root Directory** to `backend`.
-2. Deploy it as an Express project.
-3. Set `FRONTEND_URL` after the frontend receives its production URL.
-4. Do not set `DATABASE_PATH` on Vercel.
+Create a Railway service from this GitHub repository:
 
-When `VERCEL=1`, the API automatically uses:
+1. Set the service **Root Directory** to `backend`.
+2. Set the Build Command to `npm run build`.
+3. Set the Start Command to `npm run start`.
+4. Generate a public Railway domain for the service.
+5. Set `FRONTEND_URL` to the deployed frontend URL.
 
-```text
-/tmp/taskflow.db
-```
+Do not set `PORT` manually. Railway provides it at runtime and the backend reads
+it from the environment.
 
-This makes the deployed test application functional, but `/tmp` is ephemeral.
-Tasks can disappear after a cold start, function replacement, or deployment.
-This is intentional for the selected demo deployment and is not appropriate for
-production persistence.
+Locally, SQLite is stored at `backend/data/todos.db`. On Railway, use a
+persistent volume or an external database if data must survive redeploys and
+service restarts.
 
-### Frontend project
+### Frontend on Vercel
+
+Create a Vercel project from this GitHub repository:
 
 1. Set **Root Directory** to `frontend`.
-2. Set `NEXT_PUBLIC_API_URL` to the backend Vercel URL.
+2. Set `NEXT_PUBLIC_API_URL` to the Railway backend URL.
 3. Deploy it as a Next.js project.
-4. Update backend `FRONTEND_URL` with the final frontend URL and redeploy the
-   backend.
+4. Update Railway `FRONTEND_URL` with the final Vercel frontend URL and redeploy
+   the backend.
 
 Example:
 
 ```env
 # frontend
-NEXT_PUBLIC_API_URL=https://taskflow-api.vercel.app
+NEXT_PUBLIC_API_URL=https://taskflow-api.up.railway.app
 
 # backend
 FRONTEND_URL=https://taskflow-web.vercel.app
 ```
-
-For persistent production data, replace `/tmp` with an external database or
-deploy the same backend on infrastructure with a persistent volume.

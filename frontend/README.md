@@ -8,7 +8,13 @@ copy .env.example .env.local
 npm run dev
 ```
 
-Set `NEXT_PUBLIC_API_URL` to the deployed backend URL when deploying to Vercel.
+Deploy this project to Vercel with `frontend` as the Root Directory.
+
+Set `NEXT_PUBLIC_API_URL` to the deployed Railway backend URL:
+
+```env
+NEXT_PUBLIC_API_URL=https://your-backend.up.railway.app
+```
 
 Quality checks:
 

@@ -8,12 +8,27 @@ copy .env.example .env
 npm run dev
 ```
 
-Locally, SQLite is stored at `data/todos.db`. On Vercel it is automatically
-stored at `/tmp/taskflow.db`, which is temporary and can be reset.
+Locally, SQLite is stored at `data/todos.db`.
 
-For Vercel, create a project with `backend` as its Root Directory. Keep the
-dashboard Build Command and Output Directory empty: Vercel detects
-`src/index.ts` as the Express entrypoint and deploys it as a Function.
+For Railway, create a service from the repository with `backend` as its Root
+Directory.
+
+Railway settings:
+
+```text
+Build Command: npm run build
+Start Command: npm run start
+```
+
+Environment variables:
+
+```env
+FRONTEND_URL=https://your-frontend.vercel.app
+```
+
+Do not set `PORT` manually. Railway provides it at runtime. For persistent
+SQLite data, attach a Railway Volume or replace SQLite with an external
+database.
 
 Quality checks:
 

@@ -1,6 +1,23 @@
 import axios from "axios";
 import type { Category, Todo } from "@/types/todo";
 
+const DEFAULT_API_URL = "http://localhost:4000";
+
+function getApiBaseUrl() {
+  const configuredUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+
+  if (!configuredUrl) {
+    return DEFAULT_API_URL;
+  }
+
+  const url =
+    configuredUrl.startsWith("http://") || configuredUrl.startsWith("https://")
+      ? configuredUrl
+      : `https://${configuredUrl}`;
+
+  return url.replace(/\/+$/, "");
+}
+
 export type CreateTodoPayload = {
   text: string;
   categoryId: string;
@@ -22,7 +39,7 @@ export interface TodoApi {
 }
 
 const client = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000",
+  baseURL: getApiBaseUrl(),
   headers: {
     "Content-Type": "application/json",
   },
