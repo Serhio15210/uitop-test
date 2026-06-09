@@ -14,7 +14,7 @@ backend/node_modules
 
 # testing
 /coverage
-
+.idea/
 # next.js
 /.next/
 frontend/.next/
